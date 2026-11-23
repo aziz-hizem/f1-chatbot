@@ -116,12 +116,6 @@ f1-chatbot/
     └── screenshot.png
 ```
 
-## Limitations
-
-- Answers are only as good as the generated SQL; unusual questions can produce wrong queries.
-- Data stops at the end of the 2024 season, so there are no live or future results.
-- Each question is independent: follow-up questions do not keep conversation context.
-
 ## Acknowledgments
 
 - Data: [Formula 1 World Championship (1950 - 2024)](https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020) dataset by Vopani on Kaggle
