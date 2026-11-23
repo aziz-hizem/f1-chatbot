@@ -18,8 +18,9 @@ if not API_KEY:
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 # A small fast model writes the SQL, a larger one writes the conversational answers.
 # Both can be overridden when Groq retires a model.
-SQL_MODEL = os.getenv("GROQ_SQL_MODEL", "llama-3.1-8b-instant")
-ANSWER_MODEL = os.getenv("GROQ_ANSWER_MODEL", "llama-3.3-70b-versatile")
+# Groq retired Llama 3.1 8B and Llama 3.3 70B (the original models); GPT-OSS fills the same two roles.
+SQL_MODEL = os.getenv("GROQ_SQL_MODEL", "openai/gpt-oss-20b")
+ANSWER_MODEL = os.getenv("GROQ_ANSWER_MODEL", "openai/gpt-oss-120b")
 
 SCHEMA_PATH = os.path.join(os.path.dirname(__file__), "schema.md")
 with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
@@ -118,13 +119,8 @@ In Results tables :
 {question}
 
 ### SQL query:
-Generate an accurate SQL query to answer the question based on the schema. Ensure the query only references columns and tables that exist in the schema.
-
-### Query results
-{results}
-
-### Response:
-Generate a conversational response based on the query results. If the results are empty, do not mention the query or its execution. Instead, explain why the results might be empty and suggest alternative queries or approaches. Format the response clearly and concisely.
+Write one SQLite query that answers the question, using only the tables and columns in the schema.
+Reply with the query alone, inside a ```sql code block, and nothing else.
 """
 
 RESULT_FORMATTING_PROMPT = """You are an intelligent assistant for F1 racing data. Your task is to generate a conversational response based on the raw query results provided. Do not mention the query or its execution. Focus solely on providing a clear and concise answer to the user's question.
@@ -141,6 +137,7 @@ If the results are empty, try to answer yourself but only if you're absolutely s
 ### Response:
 Generate a human conversation like response based on the query results. Format the response clearly and concisely.
 Use one or two emojis to make the response more engaging and friendly.
+Write plain text only, with no Markdown (no asterisks, headings, tables or lists): the chat window shows text as-is.
 """
 
 FINAL_PROMPT = """
@@ -156,6 +153,7 @@ You are an intelligent assistant for F1 racing data. Your task is to generate a 
 Filter the response and only take the part specific to answering the question and remove all other parts.
 Generate a human conversation like response.
 Use one or two emojis to make the response more engaging and friendly.
+Write plain text only, with no Markdown (no asterisks, headings, tables or lists): the chat window shows text as-is.
 """
 
 FAILED_SQL_PROMPT = """
@@ -167,6 +165,7 @@ FAILED_SQL_PROMPT = """
 You are an intelligent assistant for F1 racing data. Your task is to generate a conversational response to this question.
 Focus solely on providing a clear and concise answer to the user's question.
 Make sure your information is correct.
+Write plain text only, with no Markdown (no asterisks, headings, tables or lists): the chat window shows text as-is.
 """
 
 

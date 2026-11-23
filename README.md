@@ -2,7 +2,7 @@
 
 Ask questions about Formula 1 history in plain English and get conversational answers backed by real data. An LLM translates each question into SQL, the query runs against a database of every Formula 1 season from 1950 to 2024, and the results are turned back into a natural-language answer.
 
-![F1 Chatbot interface](docs/screenshot.png)
+![F1 Chatbot answering three questions from the database, with the Red Bull theme](docs/screenshot.jpg)
 
 ## How it works
 
@@ -11,7 +11,7 @@ Ask questions about Formula 1 history in plain English and get conversational an
             │
             ▼
  ┌─────────────────────┐   schema + few-shot    ┌──────────────────────────┐
- │  FastAPI  /ask      │ ─────────────────────▶ │ Llama 3.1 8B (Groq)      │
+ │  FastAPI  /ask      │ ─────────────────────▶ │ GPT-OSS 20B (Groq)       │
  │                     │ ◀───────────────────── │ writes a SQL query       │
  │                     │        SELECT ...      └──────────────────────────┘
  │                     │
@@ -21,7 +21,7 @@ Ask questions about Formula 1 history in plain English and get conversational an
  │                     │        rows            └──────────────────────────┘
  │                     │
  │                     │   question + rows      ┌──────────────────────────┐
- │                     │ ─────────────────────▶ │ Llama 3.3 70B (Groq)     │
+ │                     │ ─────────────────────▶ │ GPT-OSS 120B (Groq)      │
  │                     │ ◀───────────────────── │ writes the answer        │
  └─────────────────────┘                        └──────────────────────────┘
             │
@@ -47,7 +47,7 @@ Ask questions about Formula 1 history in plain English and get conversational an
 |---|---|
 | Frontend | React 19, Vite, Tailwind CSS, react-icons |
 | Backend | Python, FastAPI, SQLite |
-| LLMs | Groq API: Llama 3.1 8B Instant (SQL), Llama 3.3 70B Versatile (answers) |
+| LLMs | Groq API: GPT-OSS 20B (SQL), GPT-OSS 120B (answers). Built on Llama 3.1 8B and Llama 3.3 70B until Groq retired them |
 | Tests | pytest, FastAPI TestClient |
 
 ## Running locally
@@ -75,6 +75,10 @@ uvicorn main:app --reload
 ```
 
 The API runs at http://localhost:8000.
+
+The models are set in `backend/llm_query.py` and can be changed without touching code, for
+example when Groq retires one, through `GROQ_SQL_MODEL` and `GROQ_ANSWER_MODEL` in `backend/.env`.
+Groq's free tier allows a few questions per minute, since each question sends the full schema.
 
 ### Frontend
 
@@ -113,7 +117,7 @@ f1-chatbot/
 │   └── src/App.jsx       # Chat UI, themes, response mode menu
 └── docs/
     ├── prd.md            # Functional requirements written before building
-    └── screenshot.png
+    └── screenshot.jpg
 ```
 
 ## Acknowledgments
