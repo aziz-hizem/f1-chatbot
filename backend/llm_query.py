@@ -18,7 +18,6 @@ if not API_KEY:
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 # A small fast model writes the SQL, a larger one writes the conversational answers.
 # Both can be overridden when Groq retires a model.
-# Groq retired Llama 3.1 8B and Llama 3.3 70B (the original models); GPT-OSS fills the same two roles.
 SQL_MODEL = os.getenv("GROQ_SQL_MODEL", "openai/gpt-oss-20b")
 ANSWER_MODEL = os.getenv("GROQ_ANSWER_MODEL", "openai/gpt-oss-120b")
 
@@ -191,7 +190,7 @@ def call_groq(prompt: str, model: str = ANSWER_MODEL, temperature: float = 0.3) 
     return body["choices"][0]["message"]["content"]
 
 
-def get_sql_from_llama(question: str, results: str = "No results available") -> str:
+def get_sql_query(question: str, results: str = "No results available") -> str:
     prompt = PROMPT_TEMPLATE.format(schema=DB_SCHEMA, question=question, results=results)
 
     try:

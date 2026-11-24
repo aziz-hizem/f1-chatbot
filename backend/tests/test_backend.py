@@ -43,7 +43,7 @@ def test_database_is_opened_read_only_even_for_disguised_writes():
 
 @pytest.fixture
 def client(monkeypatch):
-    monkeypatch.setattr(main, "get_sql_from_llama", lambda question: CHAMPION_2021_SQL)
+    monkeypatch.setattr(main, "get_sql_query", lambda question: CHAMPION_2021_SQL)
     monkeypatch.setattr(main, "call_groq", lambda prompt: "Max Verstappen won the 2021 title 🏆")
     return TestClient(main.app)
 
@@ -60,6 +60,6 @@ def test_ask_returns_selected_responses(client):
 
 
 def test_ask_falls_back_when_no_sql_is_generated(client, monkeypatch):
-    monkeypatch.setattr(main, "get_sql_from_llama", lambda question: "Error: Unable to extract SQL query.")
+    monkeypatch.setattr(main, "get_sql_query", lambda question: "Error: Unable to extract SQL query.")
     response = client.post("/ask", json={"question": "Who is the best driver ever?"})
     assert response.json()["responses"] == [{"type": "refined", "content": "Max Verstappen won the 2021 title 🏆"}]

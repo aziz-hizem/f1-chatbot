@@ -10,7 +10,7 @@ from llm_query import (
     FINAL_PROMPT,
     RESULT_FORMATTING_PROMPT,
     call_groq,
-    get_sql_from_llama,
+    get_sql_query,
 )
 
 app = FastAPI()
@@ -42,7 +42,7 @@ async def ask_question(request: Request):
     question = data.get("question")
     selected_responses = data.get("selectedResponses", {})
 
-    sql_query = get_sql_from_llama(question)
+    sql_query = get_sql_query(question)
 
     # No usable SQL: fall back to answering from the model's own knowledge
     if sql_query.startswith("Error"):

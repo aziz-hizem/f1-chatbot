@@ -47,7 +47,7 @@ Ask questions about Formula 1 history in plain English and get conversational an
 |---|---|
 | Frontend | React 19, Vite, Tailwind CSS, react-icons |
 | Backend | Python, FastAPI, SQLite |
-| LLMs | Groq API: GPT-OSS 20B (SQL), GPT-OSS 120B (answers). Built on Llama 3.1 8B and Llama 3.3 70B until Groq retired them |
+| LLMs | Groq API: GPT-OSS 20B (SQL), GPT-OSS 120B (answers) |
 | Tests | pytest, FastAPI TestClient |
 
 ## Running locally
